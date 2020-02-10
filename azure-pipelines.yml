@@ -1,8 +1,8 @@
 trigger:
-- '*'
+- 'master'
 
 pool:
-  vmImage: 'ubuntu-16.04'
+  vmImage: 'ubuntu-latest'
   demands:
   - npm
 
@@ -10,29 +10,5 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
-  displayName: 'Use .NET Core SDK 3.1.100'
-  inputs:
-    packageType: sdk
-    version: 3.1.100
-
-
-- task: gulp@1
-  displayName: 'Run gulp tasks'
-
-- script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
-  displayName: 'Write build info'
-  workingDirectory: Tailspin.SpaceGame.Web/wwwroot
-
-- task: DotNetCoreCLI@2
-  displayName: 'Restore project dependencies'
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build the project - Release'
-  inputs:
-    command: 'build'
-    arguments: '--no-restore --configuration Release'
-    projects: '**/*.csproj'
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'dotnet build --configuration $(buildConfiguration)'
